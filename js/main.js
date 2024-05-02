@@ -3,6 +3,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { Camera } from './camera.js';
 import { Lights } from './lights.js'
+import { Models, manager, features } from './models_loader.js'
 
 function init(){
     //инициализация объектов, где проходит рендер
@@ -29,38 +30,14 @@ function init(){
     rend.outputColorSpace = THREE.SRGBColorSpace
     rend.shadowMap.enabled = true
 
-    //подгрузка моделей
-    const loader = new GLTFLoader()
-
-    let char
-    let mixer_char
-    let char_anim
-
-    let k
-    loader.load(
-        '/assets/char/main.glb',
-        function (gltf){
-            char = gltf.scene
-            char.rotation.y = Math.PI
-            scene.add(char)
-            console.log(char.children)
-            char.traverse(function(n) {
-                console.log(n)
-                if(n.isMesh){
-                    n.castShadow = true
-                }
-            })
-            
-            const clip = THREE.AnimationClip.findByName(gltf.animations, 'main');
-            mixer_char = new THREE.AnimationMixer(char);
-            char_anim = mixer_char.clipAction(clip);
-            char_anim.play()
-            console.log(char_anim)
-            k = char.children[0].children.splice(1, 1)
-            console.log(char.children[0].children)
+    manager.onLoad = function(){
+        for (const model of Object.values(Models)){
+            scene.add(model.model)
         }
-    )
-    
+        for (const feature of features){
+            feature()
+        }
+    }
     //изменения если изменился размер окна
     window.addEventListener('resize', () => {
         camera.camera.aspect = div.offsetWidth / div.offsetHeight;
@@ -88,7 +65,9 @@ function init(){
         //вращение камеры
         camera.update(pointer)
         const delta = clock.getDelta()
-        if (mixer_char) mixer_char.update(delta)
+        for (const model of Object.values(Models)){
+            model.update(delta)
+        }
         requestAnimationFrame(update)
         rend.render(scene, camera.camera)
         // console.log(rend.info.memory)
