@@ -46,7 +46,7 @@ class Model{
     }
 }
 
-Models['main_char'] = new Model('/assets/main_char/main_char.glb', ['blink', 'blink_l', 'blink_r', 'walk'])
+Models['main_char'] = new Model('assets/main_char/main_char.glb', ['blink', 'blink_l', 'blink_r', 'walk'])
 
 features.push(()=>{
     Models['main_char'] = add_properties(Models['main_char'])
