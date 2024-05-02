@@ -1,5 +1,6 @@
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
+import { add_properties } from './main_char.js'
 
 const manager = new THREE.LoadingManager()
 const loader = new GLTFLoader(manager)
@@ -28,6 +29,7 @@ class Model{
         })
 
         this.mixer = new THREE.AnimationMixer(this.model);
+        console.log(gltf.animations)
         for (const name of this.names){
             const anim = THREE.AnimationClip.findByName(gltf.animations, name)
             this.animations[name] = this.mixer.clipAction(anim)
@@ -44,9 +46,10 @@ class Model{
     }
 }
 
-Models['main_char'] = new Model('/assets/char/main.glb', ['main'])
+Models['main_char'] = new Model('/assets/main_char/main_char.glb', ['blink', 'blink_l', 'blink_r', 'walk'])
+
 features.push(()=>{
-    Models['main_char'].animations['main'].play()
+    Models['main_char'] = add_properties(Models['main_char'])
 })
 
 export {Models, manager, features}

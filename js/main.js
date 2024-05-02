@@ -24,6 +24,13 @@ function init(){
         scene.add(light)
     }
 
+    const planeG = new THREE.PlaneGeometry(10, 10)
+    const matP = new THREE.MeshStandardMaterial({color: 0xFFFFFF})
+    const floor = new THREE.Mesh(planeG, matP)
+    floor.receiveShadow = true
+    floor.rotation.x = -0.5 * Math.PI
+    scene.add(floor)
+
     //рендер для сцены
     const rend = new THREE.WebGLRenderer({canvas});
     rend.setSize(div.offsetWidth, div.offsetHeight);
@@ -37,6 +44,7 @@ function init(){
         for (const feature of features){
             feature()
         }
+        console.log(Models)
     }
     //изменения если изменился размер окна
     window.addEventListener('resize', () => {
@@ -46,10 +54,12 @@ function init(){
     })
 
     window.addEventListener('keydown', function(event){
-        // char.children[0].children[0].geometry.dispose()
-        // char.children[0].children[0] = k[0]
-        // console.log(char.children[0].children)
-        char.rotation.y = camera.angleY
+        Models['main_char'].change_direction(event, 1);
+        // Models['main_char'].model.rotation.y = camera.angleY + Math.PI
+    })
+
+    window.addEventListener('keyup', function(event){
+        Models['main_char'].change_direction(event, 0);
     })
 
     //вращение камеры
@@ -66,7 +76,7 @@ function init(){
         camera.update(pointer)
         const delta = clock.getDelta()
         for (const model of Object.values(Models)){
-            model.update(delta)
+            model.update(delta, camera)
         }
         requestAnimationFrame(update)
         rend.render(scene, camera.camera)
