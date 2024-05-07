@@ -4,8 +4,8 @@ const x = new THREE.Vector3(1, 0, 0).normalize()
 const y = new THREE.Vector3(0, 1, 0).normalize()
 
 export class Camera{
-    constructor(div){
-        this.camera = new THREE.PerspectiveCamera(75, div.offsetWidth / div.offsetHeight, 0.1, 1000)
+    constructor(){
+        this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
         this.camera.rotation.x = -0.4
         this.camera.position.z = 6
 

@@ -13,7 +13,7 @@ function add_properties(Model){
         if (event.code === 'KeyA') Model.keys_down.w = 1 * pos
         Model.movement_direction.z = 0 - Model.keys_down.x + Model.keys_down.y
         Model.movement_direction.x = 0 - Model.keys_down.z + Model.keys_down.w
-        console.log(Model.movement_direction)
+        // console.log(Model.movement_direction)
     }
 
     Model.update = (delta, camera) =>{
@@ -24,7 +24,7 @@ function add_properties(Model){
         else {
             Model.animations['walk'].paused = false
             let angle = Model.movement_direction.angleTo(z)
-            console.log(angle)
+            // console.log(angle)
             if (Model.movement_direction.x) angle *= Model.movement_direction.x
             Model.model.rotation.y = Math.PI + camera.angleY + angle
             Model.model.translateZ(0.07)
@@ -40,6 +40,7 @@ function add_properties(Model){
     Model.animations['blink_l'].play()
     Model.animations['blink_r'].play()
     Model.model.rotation.y = Math.PI
+    console.log(Model.model)
 
     return Model
 }
