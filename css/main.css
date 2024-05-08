@@ -9,10 +9,17 @@ body{
     margin: 0;
     overflow: hidden;
 }
-#content{
+#elements, #main {
     width: 100%;
-    height: 100vh;
+    height: 100%;
+    position: absolute;
+    top: 0; left: 0;
 }
-#w{
-    background-color: aqua;
+
+#elements{
+    background-color: #152620;
+}
+
+#testing{
+    background-color: rgb(255, 0, 0);
 }

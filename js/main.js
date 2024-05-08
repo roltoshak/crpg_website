@@ -1,25 +1,23 @@
 import * as THREE from 'three';
+
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
+import { CSS3DRenderer, CSS3DObject } from 'https://threejs.org/examples/jsm/renderers/CSS3DRenderer.js'
+
 import { Camera } from './camera.js';
 import { Lights } from './lights.js'
 import { Models, manager, features } from './models_loader.js'
+import { Elements, add_to_scene} from './elements_loader.js';
 
 function init(){
-    //инициализация объектов, где проходит рендер
-    const div = document.getElementById("content")
-    const canvas = document.getElementById("main")
 
-    //инициализация сцены и камеры
     const scene = new THREE.Scene()
-    scene.background = new THREE.Color(0x152620)
 
-    const camera = new Camera(div)
+    const camera = new Camera()
     scene.add(camera.pos)
 
     const raycaster = new THREE.Raycaster();
 
-    //добавление света
     for (const light of Lights){
         scene.add(light)
     }
@@ -31,11 +29,19 @@ function init(){
     floor.rotation.x = -0.5 * Math.PI
     scene.add(floor)
 
-    //рендер для сцены
-    const rend = new THREE.WebGLRenderer({canvas});
-    rend.setSize(div.offsetWidth, div.offsetHeight);
+    const labelRenderer = new CSS3DRenderer();
+    labelRenderer.setSize( window.innerWidth, window.innerHeight );
+    labelRenderer.domElement.style.position = 'absolute';
+    labelRenderer.domElement.style.top = 0;
+    document.querySelector('#elements').appendChild( labelRenderer.domElement )
+
+    const rend = new THREE.WebGLRenderer({alpha:true});
+    rend.setSize(window.innerWidth, window.innerHeight);
     rend.outputColorSpace = THREE.SRGBColorSpace
     rend.shadowMap.enabled = true
+    document.querySelector('#main').appendChild( rend.domElement )
+
+    for (const el of add_to_scene) scene.add(el.object)
 
     manager.onLoad = function(){
         for (const model of Object.values(Models)){
@@ -44,25 +50,23 @@ function init(){
         for (const feature of features){
             feature()
         }
-        console.log(Models)
     }
-    //изменения если изменился размер окна
+
     window.addEventListener('resize', () => {
-        camera.camera.aspect = div.offsetWidth / div.offsetHeight;
+        camera.camera.aspect = window.innerWidth / window.innerHeight;
         camera.camera.updateProjectionMatrix();
-        rend.setSize(div.offsetWidth, div.offsetHeight);
+        rend.setSize(window.innerWidth, window.innerHeight);
+        labelRenderer.setSize( window.innerWidth, window.innerHeight );
     })
 
     window.addEventListener('keydown', function(event){
         Models['main_char'].change_direction(event, 1);
-        // Models['main_char'].model.rotation.y = camera.angleY + Math.PI
     })
 
     window.addEventListener('keyup', function(event){
         Models['main_char'].change_direction(event, 0);
     })
 
-    //вращение камеры
     const pointer = new THREE.Vector2()
     window.addEventListener('mousemove', function(event){
         pointer.x = ( event.clientX / window.innerWidth ) * 2 - 1;
@@ -72,15 +76,15 @@ function init(){
 
     const clock = new THREE.Clock() 
     function update(){
-        //вращение камеры
         camera.update(pointer)
         const delta = clock.getDelta()
         for (const model of Object.values(Models)){
             model.update(delta, camera)
         }
-        requestAnimationFrame(update)
+        
         rend.render(scene, camera.camera)
-        // console.log(rend.info.memory)
+        labelRenderer.render( scene, camera.camera )
+        requestAnimationFrame(update)
     }
 
     update()
