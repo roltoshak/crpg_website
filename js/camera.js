@@ -18,10 +18,11 @@ export class Camera{
     }
 
     update(pointer){
-        this.angleY = (this.angleY - Math.PI/90 * pointer.x) % (Math.PI * 2)
-        this.pos.rotateOnWorldAxis(y, -Math.PI/90 * pointer.x)
-        
-        const rotX = -Math.PI/60 * ((Math.abs(pointer.y) > 0.3) ? pointer.y / 2 : 0)
+        if (Math.abs(pointer.x) >= 0.2){
+            this.angleY = (this.angleY - Math.PI/60 * pointer.x) % (Math.PI * 2)
+            this.pos.rotateOnWorldAxis(y, -Math.PI/60 * pointer.x)
+        }
+        const rotX = Math.PI/45 * ((Math.abs(pointer.y) > 0.3) ? pointer.y / 2 : 0)
         this.angleX += rotX
         if (this.angleX < -0.5){
             this.angleX = -0.5
