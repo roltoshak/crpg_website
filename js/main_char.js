@@ -1,4 +1,11 @@
 import * as THREE from 'three'
+import * as CANNON from 'cannon-es'
+
+const X = new THREE.Vector3(1, 0, 0)
+const Y = new THREE.Vector3(0, 1, 0)
+const Z = new THREE.Vector3(0, 0, 1)
+const NEW_ANGLE = new THREE.Quaternion(0, Math.PI, 0)
+const NEW_POS = new CANNON.Vec3()
 
 function add_properties(Model){
     const z = new THREE.Vector3(0, 0, -1)
@@ -16,6 +23,10 @@ function add_properties(Model){
         // console.log(Model.movement_direction)
     }
 
+    Model.raycasting = () =>{
+        console.log('hi')
+    }
+
     Model.update = (delta, camera) =>{
         Model.mixer.update(delta)
         if (Model.movement_direction.x === 0 && Model.movement_direction.z === 0){
@@ -26,11 +37,19 @@ function add_properties(Model){
             let angle = Model.movement_direction.angleTo(z)
             // console.log(angle)
             if (Model.movement_direction.x) angle *= Model.movement_direction.x
-            Model.model.rotation.y = Math.PI + camera.angleY + angle
-            Model.model.translateZ(0.07)
-            camera.pos.position.x = Model.model.position.x
-            camera.pos.position.z = Model.model.position.z
+            NEW_ANGLE.setFromAxisAngle(Y, Math.PI + camera.angleY + angle)
+            Model.hitbox.quaternion.slerp(NEW_ANGLE, 0.3, Model.hitbox.quaternion)
+            
+            Model.hitbox.vectorToLocalFrame(Z, NEW_POS)
+            Model.hitbox.position.x -= NEW_POS.x * 0.07
+            Model.hitbox.position.z += NEW_POS.z * 0.07
+
         }
+        Model.model.position.copy(Model.hitbox.position)
+        Model.model.position.y -= Model.hitbox_prop.position.y
+        Model.model.quaternion.copy(Model.hitbox.quaternion)
+        camera.pos.position.copy(Model.model.position)
+        camera.pos.position.y += 9
         
     }
 
@@ -39,8 +58,8 @@ function add_properties(Model){
     Model.animations['blink'].play()
     Model.animations['blink_l'].play()
     Model.animations['blink_r'].play()
-    Model.model.rotation.y = Math.PI
-    console.log(Model.model)
+    Model.hitbox.quaternion.setFromAxisAngle(Y, Math.PI)
+    Model.model.quaternion.y = Model.hitbox.quaternion.y
 
     return Model
 }
