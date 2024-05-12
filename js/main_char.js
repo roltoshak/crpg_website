@@ -23,10 +23,6 @@ function add_properties(Model){
         // console.log(Model.movement_direction)
     }
 
-    Model.raycasting = () =>{
-        console.log('hi')
-    }
-
     Model.update = (delta, camera) =>{
         Model.mixer.update(delta)
         if (Model.movement_direction.x === 0 && Model.movement_direction.z === 0){
@@ -41,15 +37,15 @@ function add_properties(Model){
             Model.hitbox.quaternion.slerp(NEW_ANGLE, 0.3, Model.hitbox.quaternion)
             
             Model.hitbox.vectorToLocalFrame(Z, NEW_POS)
-            Model.hitbox.position.x -= NEW_POS.x * 0.07
-            Model.hitbox.position.z += NEW_POS.z * 0.07
+            Model.hitbox.position.x -= NEW_POS.x * 0.014
+            Model.hitbox.position.z += NEW_POS.z * 0.014
 
         }
         Model.model.position.copy(Model.hitbox.position)
         Model.model.position.y -= Model.hitbox_prop.position.y
         Model.model.quaternion.copy(Model.hitbox.quaternion)
         camera.pos.position.copy(Model.model.position)
-        camera.pos.position.y += 9
+        camera.pos.position.y += 1.8
         
     }
 
@@ -60,6 +56,7 @@ function add_properties(Model){
     Model.animations['blink_r'].play()
     Model.hitbox.quaternion.setFromAxisAngle(Y, Math.PI)
     Model.model.quaternion.y = Model.hitbox.quaternion.y
+    Model.hitbox.isChar = true
 
     return Model
 }

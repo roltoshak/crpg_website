@@ -34,11 +34,10 @@ function init(){
     scene.add(floor)
     const ground = new CANNON.Body({
         mass:0,
-        shape: new CANNON.Box(new CANNON.Vec3(5, 5, 0.01))
+        shape: new CANNON.Plane()
     })
     ground.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), -Math.PI/2)
     floor.quaternion.copy(ground.quaternion)
-
     phys.addBody(ground)
 
     const labelRenderer = new CSS3DRenderer();
@@ -53,7 +52,10 @@ function init(){
     rend.shadowMap.enabled = true
     document.querySelector('#main').appendChild( rend.domElement )
 
-    // for (const el of add_to_scene) scene.add(el.object)
+    for (const el of add_to_scene) {
+        scene.add(el.object)
+        phys.addBody(el.hitbox)
+    }
 
     manager.onLoad = function(){
         for (const model of Object.values(Models)){
@@ -80,11 +82,29 @@ function init(){
         Models['main_char'].change_direction(event, 0);
     })
 
-    const pointer = new THREE.Vector2()
+    const pointer = new THREE.Vector2(0, 0)
     window.addEventListener('mousemove', function(event){
         pointer.x = ( event.clientX / window.innerWidth ) * 2 - 1;
 	    pointer.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
         
+    })
+
+    phys.addEventListener('beginContact', (event)=>{
+        if(event.bodyA.isChar && event.bodyB.isEl){
+            event.bodyB.visibility(true)
+        }
+        if(event.bodyB.isChar && event.bodyA.isEl){
+            event.bodyA.visibility(true)
+        }
+    })
+
+    phys.addEventListener('endContact', (event)=>{
+        if(event.bodyA.isChar && event.bodyB.isEl){
+            event.bodyB.visibility(false)
+        }
+        if(event.bodyB.isChar && event.bodyA.isEl){
+            event.bodyA.visibility(false)
+        }
     })
 
     const clock = new THREE.Clock() 
@@ -93,10 +113,17 @@ function init(){
         const delta = clock.getDelta()
         phys.step(1/60)
         for (const model of Object.values(Models)){
-            model.update(delta, camera)
+            model.update(1/60, camera)
         }
-        
-        
+        // raycaster.setFromCamera( pointer, camera.camera );
+	    // const intersects = raycaster.intersectObjects( scene.children );
+        // // console.log(intersects)
+        // if (intersects.length > 0) {
+        //     console.log(intersects[0])
+        //     if (intersects[0].object.raycasting) {
+        //         intersects[0].object.raycasting('kkkk')
+        //     }
+        // }
         rend.render(scene, camera.camera)
         labelRenderer.render( scene, camera.camera )
         requestAnimationFrame(update)

@@ -1,0 +1,6 @@
+#start{
+    /* background-color: rgb(255, 0, 0); */
+    text-align: center;
+    align-content: center;
+    transition: opacity 0.5s ease-out;
+}

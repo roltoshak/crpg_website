@@ -6,12 +6,12 @@ const y = new THREE.Vector3(0, 1, 0).normalize()
 export class Camera{
     constructor(){
         this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
-        this.camera.rotation.x = -0.4
-        this.camera.position.z = 6
+        this.camera.rotation.x = -0.2
+        this.camera.position.z = 1.2
 
         this.pos = new THREE.Group()
         this.pos.add(this.camera)
-        this.pos.position.y = 9
+        this.pos.position.y = 1.8
 
         this.angleX = 0
         this.angleY = 0
