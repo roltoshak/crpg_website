@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
+import { RGBELoader } from 'three/addons/loaders/RGBELoader.js'
 import { CSS3DRenderer, CSS3DObject } from 'https://threejs.org/examples/jsm/renderers/CSS3DRenderer.js'
 import * as CANNON from 'cannon-es'
 
@@ -46,11 +46,19 @@ function init(){
     labelRenderer.domElement.style.top = 0;
     document.querySelector('#elements').appendChild( labelRenderer.domElement )
 
-    const rend = new THREE.WebGLRenderer({alpha:true});
+    const rend = new THREE.WebGLRenderer();
     rend.setSize(window.innerWidth, window.innerHeight);
     rend.outputColorSpace = THREE.SRGBColorSpace
     rend.shadowMap.enabled = true
+    rend.toneMapping = THREE.LinearToneMapping
+    rend.toneMappingExposure = 0.4
     document.querySelector('#main').appendChild( rend.domElement )
+
+    new RGBELoader().load('/assets/images/sky3.hdr', function(texture){
+        texture.mapping = THREE.EquirectangularReflectionMapping
+        scene.background = texture
+        scene.environment = texture
+    })
 
     for (const el of add_to_scene) {
         scene.add(el.object)

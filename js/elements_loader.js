@@ -57,8 +57,8 @@ class Element{
                 EL.geometry.visible = true
             }
             else {
-                EL.div.style.opacity = '0%'
                 EL.geometry.visible = false
+                EL.div.style.opacity = '0%'
             }
         }
     }
@@ -74,7 +74,11 @@ edit = new Element('heading', 'start', {
     quaternion: new THREE.Vector3(0, 0, 0),
     addY: 4
 })
-edit.div.innerText = 'ЖАНР CRPG'
+edit.div.appendChild(document.createElement('p'))
+edit.div.children[0].innerText = 'ЖАНР CRPG'
+edit.div.appendChild(document.createElement('p'))
+edit.div.children[1].setAttribute('class', "text")
+edit.div.children[1].innerText = 'что это и почему это интересно'
 add_to_scene.push(edit)
 
 Elements['start'] = edit

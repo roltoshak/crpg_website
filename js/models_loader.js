@@ -89,11 +89,25 @@ features.push(()=>{
     Models['main_char'] = add_properties(Models['main_char'])
 })
 
-Models['house1'] = new Model('assets/house1/house1.glb', [], 0, {
+Models['house1_1'] = new Model('assets/house1/house1.glb', [], 0, {
     size: new THREE.Vector3(4.224, 5.913, 7.265),
     position: new THREE.Vector3(0.183, 2.940, 0.011)},
     {
-    position: new THREE.Vector3(0, 0, -10),
-    quaternion: new THREE.Vector3(0, -Math.PI/2, 0)})
+    position: new THREE.Vector3(-5.938, 0, 3.222),
+    quaternion: new THREE.Vector3(0, 0, 0)})
+
+Models['house1_2'] = new Model('assets/house1/house1.glb', [], 0, {
+    size: new THREE.Vector3(4.224, 5.913, 7.265),
+    position: new THREE.Vector3(0.183, 2.940, 0.011)},
+    {
+    position: new THREE.Vector3(14.592, 0, -4.050),
+    quaternion: new THREE.Vector3(-Math.PI, Math.PI/180 * -88.95, -Math.PI)})
+
+Models['house1_3'] = new Model('assets/house1/house1.glb', [], 0, {
+    size: new THREE.Vector3(4.224, 5.913, 7.265),
+    position: new THREE.Vector3(0.183, 2.940, 0.011)},
+    {
+    position: new THREE.Vector3(18.936, 0, -4.050),
+    quaternion: new THREE.Vector3(-Math.PI, Math.PI/180 * -88.95, -Math.PI)})
 
 export {Models, manager, features}
