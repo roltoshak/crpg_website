@@ -3,6 +3,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import * as CANNON from 'cannon-es'
 
 import { add_properties } from './main_char.js'
+import { Elements} from './elements_loader.js';
 
 const manager = new THREE.LoadingManager()
 const loader = new GLTFLoader(manager)
@@ -81,19 +82,68 @@ Models['main_char'] = new Model('assets/main_char/main_char.glb', ['blink', 'bli
     size: new THREE.Vector3(0.730, 1.863, 0.689),
     position: new THREE.Vector3(0, 0.936, 0)},
     {
-    position: new THREE.Vector3(0, 0, 0),
+    position: new THREE.Vector3(0, 0, 1.7),
     quaternion: new THREE.Vector3(0, 0, 0)})
 
 features.push(()=>{
-    Models['main_char'].raycasting = (hi)=>{console.log(hi)}
     Models['main_char'] = add_properties(Models['main_char'])
 })
 
-Models['house1'] = new Model('assets/house1/house1.glb', [], 0, {
+Models['house1_1'] = new Model('assets/house1/house1.glb', [], 0, {
     size: new THREE.Vector3(4.224, 5.913, 7.265),
     position: new THREE.Vector3(0.183, 2.940, 0.011)},
     {
-    position: new THREE.Vector3(0, 0, -10),
-    quaternion: new THREE.Vector3(0, -Math.PI/2, 0)})
+    position: new THREE.Vector3(-5.938, 0, 3.222),
+    quaternion: new THREE.Vector3(0, 0, 0)})
 
+Models['house1_2'] = new Model('assets/house1/house1.glb', [], 0, {
+    size: new THREE.Vector3(4.224, 5.913, 7.265),
+    position: new THREE.Vector3(0.183, 2.940, 0.011)},
+    {
+    position: new THREE.Vector3(12.253, 0, -4.050),
+    quaternion: new THREE.Vector3(-Math.PI, Math.PI/180 * -88.95, -Math.PI)})
+
+Models['house1_3'] = new Model('assets/house1/house1.glb', [], 0, {
+    size: new THREE.Vector3(4.224, 5.913, 7.265),
+    position: new THREE.Vector3(0.183, 2.940, 0.011)},
+    {
+    position: new THREE.Vector3(-8.810, 0, -5.594),
+    quaternion: new THREE.Vector3(-Math.PI, Math.PI/180 * 7.77, -Math.PI)})
+
+Models['house1_4'] = new Model('assets/house1/house1.glb', [], 0, {
+    size: new THREE.Vector3(4.224, 5.913, 7.265),
+    position: new THREE.Vector3(0.183, 2.940, 0.011)},
+    {
+    position: new THREE.Vector3(-8.127, 0, -14.697),
+    quaternion: new THREE.Vector3(0, Math.PI/180 * -46.25, 0)})
+Models['house1_5'] = new Model('assets/house1/house1.glb', [], 0, {
+    size: new THREE.Vector3(4.224, 5.913, 7.265),
+    position: new THREE.Vector3(0.183, 2.940, 0.011)},
+    {
+    position: new THREE.Vector3(10.362, 0, -11.222),
+    quaternion: new THREE.Vector3(-Math.PI, Math.PI/180 * -9.05, -Math.PI)})
+Models['house1_6'] = new Model('assets/house1/house1.glb', [], 0, {
+    size: new THREE.Vector3(4.224, 5.913, 7.265),
+    position: new THREE.Vector3(0.183, 2.940, 0.011)},
+    {
+    position: new THREE.Vector3(2.666, 0, -16.732),
+    quaternion: new THREE.Vector3(-Math.PI, Math.PI/180 * -83.62, -Math.PI)})
+Models['chest'] = new Model('assets/chest/chest.glb', ['open'], 0, {
+    size: new THREE.Vector3(0.813, 0.762, 0.637),
+    position: new THREE.Vector3(0, 0.391, 0)},
+    {
+    position: new THREE.Vector3(0.195, 0, -9.368),
+    quaternion: new THREE.Vector3(0, -Math.PI, 0)})
+features.push(()=>{
+    Models['chest'].element = Elements['t_chest_2']
+    Models['chest'].raycasting = ()=>{
+        const Model = Models['chest']
+        console.log(Models['chest'])
+        Model.animations['open'].setLoop(THREE.LoopOnce)
+        Model.animations['open'].clampWhenFinished = true
+        Model.animations['open'].play()
+        Model.element.hitbox.visibility(1)
+
+    }
+})
 export {Models, manager, features}

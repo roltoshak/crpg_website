@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
+import { RGBELoader } from 'three/addons/loaders/RGBELoader.js'
 import { CSS3DRenderer, CSS3DObject } from 'https://threejs.org/examples/jsm/renderers/CSS3DRenderer.js'
 import * as CANNON from 'cannon-es'
 
@@ -27,8 +27,8 @@ function init(){
         scene.add(light)
     }
 
-    const planeG = new THREE.PlaneGeometry(10, 10)
-    const matP = new THREE.MeshStandardMaterial({color: 0xFFFFFF, side: THREE.DoubleSide})
+    const planeG = new THREE.PlaneGeometry(1000, 1000)
+    const matP = new THREE.MeshStandardMaterial({color: 0xb5b8ae, side: THREE.DoubleSide})
     const floor = new THREE.Mesh(planeG, matP)
     floor.receiveShadow = true
     scene.add(floor)
@@ -46,11 +46,19 @@ function init(){
     labelRenderer.domElement.style.top = 0;
     document.querySelector('#elements').appendChild( labelRenderer.domElement )
 
-    const rend = new THREE.WebGLRenderer({alpha:true});
+    const rend = new THREE.WebGLRenderer();
     rend.setSize(window.innerWidth, window.innerHeight);
     rend.outputColorSpace = THREE.SRGBColorSpace
+    // rend.toneMapping = THREE.ACESFilmicToneMapping
+    // rend.toneMappingExposure = 0.9
     rend.shadowMap.enabled = true
     document.querySelector('#main').appendChild( rend.domElement )
+
+    new RGBELoader().load('/assets/images/sky5.hdr', function(texture){
+        texture.mapping = THREE.EquirectangularReflectionMapping
+        scene.background = texture
+        // scene.environment = texture
+    })
 
     for (const el of add_to_scene) {
         scene.add(el.object)
@@ -89,6 +97,18 @@ function init(){
         
     })
 
+    window.addEventListener('mousedown', function(event){
+        raycaster.setFromCamera( pointer, camera.camera );
+	    const intersects = raycaster.intersectObjects( scene.children );
+        if (intersects.length > 0) {
+            console.log(intersects[0])
+            if (intersects[0].object.raycasting) {
+                intersects[0].object.raycasting()
+            }
+        }
+        
+    })
+
     phys.addEventListener('beginContact', (event)=>{
         if(event.bodyA.isChar && event.bodyB.isEl){
             event.bodyB.visibility(true)
@@ -115,15 +135,7 @@ function init(){
         for (const model of Object.values(Models)){
             model.update(1/60, camera)
         }
-        // raycaster.setFromCamera( pointer, camera.camera );
-	    // const intersects = raycaster.intersectObjects( scene.children );
-        // // console.log(intersects)
-        // if (intersects.length > 0) {
-        //     console.log(intersects[0])
-        //     if (intersects[0].object.raycasting) {
-        //         intersects[0].object.raycasting('kkkk')
-        //     }
-        // }
+        
         rend.render(scene, camera.camera)
         labelRenderer.render( scene, camera.camera )
         requestAnimationFrame(update)
