@@ -33,6 +33,5 @@ export class Camera{
         else{
             this.pos.rotateOnAxis(x, rotX)
         }
-        // console.log(this.angleY)
     }
 }

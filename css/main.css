@@ -6,7 +6,9 @@
     font-weight: 400;
     font-style: normal;
     font-size: 100px;
-    transition: opacity 0.5s ease-out;
+    transition: opacity 0.2s ease-out;
+    color: rgb(238, 71, 5);
+    background-color: rgb(40, 33, 26);
 }
 
 .text{
@@ -18,7 +20,9 @@
         "ELGR" 1,
         "ELSH" 2;
     font-size: 60px;
-    transition: opacity 0.5s ease-out;
+    transition: opacity 0.2s ease-out;
+    color: rgb(181, 140, 123);
+    background-color: rgb(40, 33, 26);
 }
 
 body{
@@ -33,5 +37,5 @@ body{
 }
 
 #elements{
-    background-color: #152620;
+    background-color: rgb(40, 33, 26);
 }

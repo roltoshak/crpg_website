@@ -20,7 +20,6 @@ function add_properties(Model){
         if (event.code === 'KeyA') Model.keys_down.w = 1 * pos
         Model.movement_direction.z = 0 - Model.keys_down.x + Model.keys_down.y
         Model.movement_direction.x = 0 - Model.keys_down.z + Model.keys_down.w
-        // console.log(Model.movement_direction)
     }
 
     Model.update = (delta, camera) =>{
