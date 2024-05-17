@@ -59,6 +59,7 @@ function init(){
         scene.background = texture
         // scene.environment = texture
     })
+    scene.background = new THREE.Color(0xa9c5c7)
 
     for (const el of add_to_scene) {
         scene.add(el.object)
