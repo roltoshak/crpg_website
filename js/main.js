@@ -54,11 +54,12 @@ function init(){
     rend.shadowMap.enabled = true
     document.querySelector('#main').appendChild( rend.domElement )
 
-    new RGBELoader().load('/assets/images/sky5.hdr', function(texture){
+    new RGBELoader().load('assets/images/sky5.hdr', function(texture){
         texture.mapping = THREE.EquirectangularReflectionMapping
         scene.background = texture
         // scene.environment = texture
     })
+    scene.background = new THREE.Color(0xa9c5c7)
 
     for (const el of add_to_scene) {
         scene.add(el.object)
